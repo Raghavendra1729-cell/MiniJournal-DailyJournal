@@ -11,7 +11,7 @@ const register = async (req, res) => {
     const newUser = new User({ name,userName, email, password });
     await newUser.save();
     const token = await generateToken(newUser._id);
-    res.cookie("token", token, { httpOnly: true,sameSite : "strict",maxAge : 30 * 24 * 60 * 60 * 1000 });
+    res.cookie("token", token, { httpOnly: true,sameSite : "strict",path:"/",maxAge : 30 * 24 * 60 * 60 * 1000 });
     res.status(201).json({ message: "User created successfully", user: newUser,token });
 }
 
@@ -26,12 +26,12 @@ const login = async (req, res) => {
         return res.status(400).json({ message: "Invalid password" });
     }
     const token = await generateToken(user._id);
-    res.cookie("token", token, { httpOnly: true,sameSite : "strict",maxAge : 30 * 24 * 60 * 60 * 1000 });
+    res.cookie("token", token, { httpOnly: true,sameSite : "strict",path:"/",maxAge : 30 * 24 * 60 * 60 * 1000 });
     res.status(200).json({ message: "User logged in successfully", user: user,token });
 }
 
 const logout = async (req, res) => {
-    res.clearCookie("token");
+    res.clearCookie("token", { httpOnly: true, sameSite: "strict", path: "/" });
     res.status(200).json({ message: "User logged out successfully" });
 }
 
