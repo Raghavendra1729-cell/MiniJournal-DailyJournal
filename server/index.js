@@ -4,9 +4,17 @@ import "dotenv/config";
 import connectDb from "./connection.js";
 import authRouter from "./routes/auth-routes.js";
 import journalRouter from "./routes/journal-routes.js";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+
 const app = express();
 
 //middlewares
+app.use(cors({
+    origin: "http://localhost:5173", // Vite default port
+    credentials: true
+}));
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

@@ -1,17 +1,8 @@
 import { User } from "../models/user.js";
 import { generateToken } from "../config.js";
 import bcrypt from "bcrypt";
+
 const register = async (req, res) => {
-    const userToken = req.cookies?.token;
-    if (userToken) {
-        try{
-            const verified = await verifyToken(userToken,process.env.JWT_SECRET);
-            return res.status(400).json({ message: "User already logged in" ,user : verified});
-            return;
-        }catch(err){
-            
-        }
-    }
     const { name,userName, email, password } = req.body;
     const user = await User.findOne({ email });
     if (user) {
@@ -25,16 +16,6 @@ const register = async (req, res) => {
 }
 
 const login = async (req, res) => {
-    const userToken = req.cookies?.token;
-    if (userToken) {
-        try{
-            const verified = await verifyToken(userToken,process.env.JWT_SECRET);
-            return res.status(400).json({ message: "User already logged in" ,user : verified});
-            return;
-        }catch(err){
-            
-        }
-    }
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
@@ -49,5 +30,13 @@ const login = async (req, res) => {
     res.status(200).json({ message: "User logged in successfully", user: user,token });
 }
 
+const logout = async (req, res) => {
+    res.clearCookie("token");
+    res.status(200).json({ message: "User logged out successfully" });
+}
 
-export { register, login };
+const getProfile = async (req, res) => {
+    res.status(200).json({ user: req.user });
+}
+
+export { register, login, logout, getProfile };

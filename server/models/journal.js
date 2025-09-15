@@ -3,9 +3,10 @@ import mongoose from "mongoose";
 
 
 const schema = mongoose.Schema({
-    title : {
-        type : String,
-        required : true
+    date : {
+        type : Date,
+        required : true,
+        default : Date.now
     },
     content : {
         type : String,
